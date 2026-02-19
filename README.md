@@ -74,7 +74,6 @@ Clone the repository:
 git clone <your-backend-repo-url>
 cd backend
 
-
 Install dependencies:
 
 npm install
@@ -85,18 +84,15 @@ Since no start script is defined in package.json, run:
 
 node app.js
 
-
 For development (recommended), you should install nodemon:
 
 npm install --save-dev nodemon
 
-
 Then add this script in package.json:
 
 "scripts": {
-  "dev": "nodemon app.js"
+"dev": "nodemon app.js"
 }
-
 
 Run:
 
@@ -108,6 +104,9 @@ Create a .env file in the root directory:
 
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
+
+//then add products and by acccessing the website as admin (for accessing the website as admin firstly, register as a normal user and then open the database like atlas or compass then go to market-mate database -> users collection -> every user has a field called isAdmin === "false" change this value to true) then delete all the already existing carousels and then register a new carousel max limit upto = 5, every image will contains a url by clicking and image on carousel you will redirect to the attached url.
+
 JWT_SECRET=your_secret_key
 EMAIL_USER=your_email
 EMAIL_PASS=your_email_password
@@ -127,9 +126,11 @@ backend/
 🔄 API Base URL
 http://localhost:5000/api
 
+or you can change the port number as you want in .env file
+
 👨‍💻 Author
 
-//**Currently working on creating realtime otp based authentication system in this backend**
+//**Currently working on attaching realtime otp based authentication system in this backend**
 
 Ankit Dhiman
 MERN Stack Developer
