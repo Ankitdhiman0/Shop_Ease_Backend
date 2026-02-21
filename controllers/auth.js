@@ -1,6 +1,7 @@
 const OTP = require("../models/otpModel");
 const sendMail = require("../utils/sendMail");
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 module.exports.requestOtp = async (req, res) => {
   try {
@@ -18,7 +19,9 @@ module.exports.requestOtp = async (req, res) => {
       return res.status(400).json({ message: "Invalid email format" });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 999999).toString();
+
+    console.log("Generated OTP:", otp);
 
     const hashedOtp = await bcrypt.hash(otp, 10);
 
@@ -56,20 +59,23 @@ module.exports.verifyOtp = async (req, res) => {
         .json({ message: "Email, OTP and purpose are required" });
     }
 
+    const record = await OTP.findOne({ email, purpose, isVerified: false });
+
+    if (!record) {
+      return res
+        .status(400)
+        .json({ message: "No OTP request found, please request OTP first" });
+    }
+
+    if (record.expiredAt < Date.now()) {
+      await OTP.deleteMany({ email, purpose });
+      return res.status(400).json({ message: "OTP has expired" });
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
-    }
-
-    const record = await OTP.findOne({ email, purpose });
-
-    if (!record) {
-      return res.status(400).json({ message: "No OTP request found" });
-    }
-
-    if (record.expiredAt < Date.now()) {
-      return res.status(400).json({ message: "OTP has expired" });
     }
 
     const isMatch = await bcrypt.compare(otp, record.otp);

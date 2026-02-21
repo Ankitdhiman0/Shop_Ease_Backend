@@ -272,7 +272,7 @@ module.exports.updateCompanyDetails = async (req, res) => {
           },
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedUser) {
@@ -395,7 +395,7 @@ module.exports.addToWishList = async (req, res) => {
     }
 
     const index = user.wishlist.findIndex(
-      (wishId) => wishId.toString() === productId
+      (wishId) => wishId.toString() === productId,
     );
 
     // TOGGLE LOGIC (NO DUPLICATES)
@@ -644,7 +644,7 @@ module.exports.removeFromCart = async (req, res) => {
     const initialLength = user.cart.length;
 
     user.cart = user.cart.filter(
-      (id) => id.toString() !== productId.toString()
+      (id) => id.toString() !== productId.toString(),
     );
 
     if (user.cart.length === initialLength) {
@@ -729,7 +729,7 @@ module.exports.removeFromAddress = async (req, res) => {
         .json({ success: false, message: "User not found" });
 
     const addressIndex = user.addresses.findIndex(
-      (addr) => addr._id.toString() === addressId
+      (addr) => addr._id.toString() === addressId,
     );
     if (addressIndex === -1) {
       return res
@@ -884,7 +884,7 @@ module.exports.getOrdersAdmin = async (req, res) => {
     const orders = await Order.find({ user: userId })
       .populate(
         "products.product",
-        "image title category subCategory discount offers description"
+        "image title category subCategory discount offers description",
       )
       .sort({ createdAt: -1 });
 
@@ -948,7 +948,7 @@ module.exports.getAllProducts = async (req, res) => {
     // Fetch paginated products
     const products = await Product.find(searchQuery)
       .select(
-        "title description category subCategory price discount offers specs image"
+        "title description category subCategory price discount offers specs image",
       )
       .sort({ createdAt: -1 })
       .skip(skip)
