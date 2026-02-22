@@ -9,61 +9,63 @@ const OTP = require("../models/otpModel");
 
 module.exports.registerUser = async (req, res) => {
   try {
-    let { name, email, password } = req.body;
+    let email = req.verifiedEmail; // From requireOtpVerified middleware
+    let { name, password } = req.body;
 
-    if (!name || !email || !password) {
-      console.log("All fields required");
-      return res.status(400).json({ message: "All fields are required" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
     }
 
-    email = email.toLowerCase();
+    if (!name || !password) {
+      return res
+        .status(400)
+        .json({ message: "Name and password are required" });
+    }
 
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      console.log("User already exists, Try Logging in!");
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
+    const hashPassword = await bcrypt.hash(password, 10);
 
-    const createdUser = await User.create({
+    const newUser = await User.create({
       name,
       email,
-      password: hash,
+      password: hashPassword,
     });
 
-    if (!createdUser) {
-      console.log("Unable to register user");
-      return res.status(500).json({ message: "User registration failed" });
+    if (!newUser) {
+      return res.status(500).json({ message: "Failed to create user" });
     }
 
     await OTP.deleteMany({ email, purpose: "register" });
 
-    const token = generateToken(createdUser._id);
+    const token = generateToken(newUser._id);
 
     res.cookie("token", token, {
       httpOnly: true,
+      secure: false,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: "/",
     });
-
-    console.log("User registered successfully");
 
     return res.status(201).json({
       message: "User registered successfully",
       success: true,
       user: {
-        id: createdUser._id,
-        name: createdUser.name,
-        email: createdUser.email,
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
       },
     });
   } catch (error) {
-    console.log("Failed to login user:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error("Register error:", error);
+    return res.status(500).json({
+      message: "Server error during registration",
+    });
   }
 };
 
@@ -72,7 +74,6 @@ module.exports.loginUser = async (req, res) => {
     let { email, password } = req.body;
 
     if (!email || !password) {
-      console.log("Email and password required");
       return res
         .status(400)
         .json({ message: "Email and password are required" });
@@ -83,14 +84,12 @@ module.exports.loginUser = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log("User not found, please register first");
       return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      console.log("Incorrect password");
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
@@ -103,8 +102,6 @@ module.exports.loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    console.log(req.user);
-    console.log("User logged in successfully");
     return res.json({
       message: "Login successful",
       success: true,
@@ -130,10 +127,9 @@ module.exports.logoutUser = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
     });
 
-    console.log("User logged out");
     return res.json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log("Failed to login user:", error);
+    console.log("Failed to logout user:", error);
     return res.status(500).json({ message: "Server error" });
   }
 };
@@ -238,10 +234,6 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.updateCompanyDetails = async (req, res) => {
   try {
-    console.log("USER:", req.user);
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-
     const { name, description, address } = req.body;
 
     if (!name || !description || !address) {

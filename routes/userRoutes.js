@@ -38,16 +38,16 @@ const {
   updateCarousel,
   deleteCarousel,
 } = require("../controllers/carouselController");
-const { requestOtp, verifyOtp } = require("../controllers/auth");
+const { requestOtp } = require("../controllers/auth");
 const { requireOtpVerified } = require("../middlewares/requireOtpVarified");
 
 //routes
 
 router.post("/otp/request", requestOtp);
 
-router.post("/otp/verify", verifyOtp);
+// router.post("/otp/verify", verifyOtp);
 
-router.post("/register", registerUser);
+router.post("/register", requireOtpVerified, registerUser);
 
 router.post("/login", loginUser);
 
