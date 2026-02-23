@@ -1,7 +1,7 @@
-⚙️ Device Compare – Backend
+⚙️ Shop-Ease – Backend
 
-Device Compare Backend is a RESTful API built with Express and MongoDB that powers the Device Compare platform.
-It handles authentication, role-based authorization (Admin & User), device management, and secure API communication.
+Shop-Ease Backend is a RESTful API built with Express and MongoDB that powers the Shop-Ease platform.
+It handles authentication, role-based authorization (Admin & User, Seller), device management, and secure API communication.
 
 🚀 Tech Stack
 
@@ -57,9 +57,7 @@ JWT Authentication
 
 Role-based Authorization (Admin / User)
 
-Add, Update, Delete Devices (Admin)
-
-Compare Mobiles & Laptops
+Read Products, User, their orders (Admin)
 
 Image Upload Support (Multer)
 
@@ -96,7 +94,7 @@ Then add this script in package.json:
 
 Run:
 
-npm run dev
+nodemon app.js
 
 ⚙️ Environment Variables
 
@@ -104,13 +102,15 @@ Create a .env file in the root directory:
 
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
+JWT_SECRET
 
 //then add products and by acccessing the website as admin (for accessing the website as admin firstly, register as a normal user and then open the database like atlas or compass then go to shop-ease database -> users collection -> every user has a field called isAdmin === "false" change this value to true) then delete all the already existing carousels and then register a new carousel max limit upto = 5, every image will contains a url by clicking and image on carousel you will redirect to the attached url.
 
-JWT_SECRET=your_secret_key
-EMAIL_USER=your_email
-EMAIL_PASS=your_email_password
-CLIENT_URL=http://localhost:5173
+MAIL_PASS
+MAIL_FROM="Shop-Ease <email@gmail.com>"
+MAIL_PORT=587
+MAIL_HOST
+MAIL_USER
 
 📂 Suggested Project Structure
 backend/
@@ -118,13 +118,13 @@ backend/
 │── models/
 │── routes/
 │── middleware/
-│── config/
+│── utils/
 │── app.js
 │── .env
 │── package.json
 
 🔄 API Base URL
-http://localhost:5000/api
+http://localhost:5000/shop-ease
 
 or you can change the port number as you want in .env file
 
