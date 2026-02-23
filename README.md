@@ -1,6 +1,6 @@
-⚙️ Device Compare – Backend
+⚙️ Shop-Ease – Backend
 
-Device Compare Backend is a RESTful API built with Express and MongoDB that powers the Device Compare platform.
+Device Compare Backend is a RESTful API built with Express and MongoDB that powers the Shop-Ease platform.
 It handles authentication, role-based authorization (Admin & User), device management, and secure API communication.
 
 🚀 Tech Stack
