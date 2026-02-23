@@ -105,7 +105,7 @@ Create a .env file in the root directory:
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 
-//then add products and by acccessing the website as admin (for accessing the website as admin firstly, register as a normal user and then open the database like atlas or compass then go to market-mate database -> users collection -> every user has a field called isAdmin === "false" change this value to true) then delete all the already existing carousels and then register a new carousel max limit upto = 5, every image will contains a url by clicking and image on carousel you will redirect to the attached url.
+//then add products and by acccessing the website as admin (for accessing the website as admin firstly, register as a normal user and then open the database like atlas or compass then go to shop-ease database -> users collection -> every user has a field called isAdmin === "false" change this value to true) then delete all the already existing carousels and then register a new carousel max limit upto = 5, every image will contains a url by clicking and image on carousel you will redirect to the attached url.
 
 JWT_SECRET=your_secret_key
 EMAIL_USER=your_email

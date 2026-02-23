@@ -18,14 +18,14 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(morgan("dev"));
 
 //routes
-app.use("/market-mate/user", userRoutes);
-app.use("/market-mate/product", productRoutes);
+app.use("/shop-ease/user", userRoutes);
+app.use("/shop-ease/product", productRoutes);
 
 //server
 const PORT = process.env.PORT || 5000;

@@ -28,16 +28,16 @@ const sendMail = async (email, otp) => {
   );
 
   htmlTemplate = htmlTemplate.replace(/{OTP_CODE}/g, otp);
-  htmlTemplate = htmlTemplate.replace(/{APP_NAME}/g, "Market-Mate");
+  htmlTemplate = htmlTemplate.replace(/{APP_NAME}/g, "Shop-Ease");
 
-  const textTemplate = `Your OTP code for Market-Mate is: ${otp}. It expires in 5 minutes. Never share this code with anyone.`;
+  const textTemplate = `Your OTP code for Shop-Ease is: ${otp}. It expires in 5 minutes. Never share this code with anyone.`;
 
   try {
     const info = await transporter.sendMail({
       // ✅ Fixed: Added await
       from: process.env.MAIL_FROM,
       to: email,
-      subject: "Market-Mate OTP",
+      subject: "Shop-Ease OTP",
       html: htmlTemplate,
       text: textTemplate,
     });
