@@ -3,10 +3,6 @@
 <<<<<<< HEAD
 Shop-Ease Backend is a RESTful API built with Express and MongoDB that powers the Shop-Ease platform.
 It handles authentication, role-based authorization (Admin & User, Seller), device management, and secure API communication.
-=======
-Device Compare Backend is a RESTful API built with Express and MongoDB that powers the Shop-Ease platform.
-It handles authentication, role-based authorization (Admin & User), device management, and secure API communication.
->>>>>>> aa86cf66293bf3efe822fe61ac49b538efbd08e9
 
 🚀 Tech Stack
 
