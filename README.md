@@ -104,14 +104,13 @@ Create a .env file in the root directory:
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET
+MAIL_PASS=gmail app password
+MAIL_FROM="Shop-Ease <shop-ease@gmail.com>"
+MAIL_PORT=587 || 465
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=naodemailer email
 
 //then add products and by acccessing the website as admin (for accessing the website as admin firstly, register as a normal user and then open the database like atlas or compass then go to shop-ease database -> users collection -> every user has a field called isAdmin === "false" change this value to true) then delete all the already existing carousels and then register a new carousel max limit upto = 5, every image will contains a url by clicking and image on carousel you will redirect to the attached url.
-
-MAIL_PASS
-MAIL_FROM="Shop-Ease <email@gmail.com>"
-MAIL_PORT=587
-MAIL_HOST
-MAIL_USER
 
 📂 Suggested Project Structure
 backend/
@@ -130,8 +129,6 @@ http://localhost:5000/shop-ease
 or you can change the port number as you want in .env file
 
 👨‍💻 Author
-
-//**Currently working on attaching realtime otp based authentication system in this backend**
 
 Ankit Dhiman
 MERN Stack Developer
