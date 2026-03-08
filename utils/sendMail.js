@@ -1,50 +1,36 @@
-const nodemailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 require("dotenv").config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT),
-  secure: Number(process.env.MAIL_PORT) === 465,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-  connectionTimeout: 10000,
-});
+const client = SibApiV3Sdk.ApiClient.instance;
+const apiKey = client.authentications["api-key"];
 
-if (process.env.NODE_ENV !== "production") {
-  transporter
-    .verify()
-    .then(() => console.log("Node Mailer is ready"))
-    .catch((err) => console.error("Mailer Verify Failed", err));
-}
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+const tranEmailApi = new SibApiV3Sdk.TransactionalEmailsApi();
 
 const sendMail = async (email, otp) => {
-  let htmlTemplate = fs.readFileSync(
-    path.join(__dirname, "otpTemplate.html"),
-    "utf-8",
-  );
-
-  htmlTemplate = htmlTemplate.replace(/{OTP_CODE}/g, otp);
-  htmlTemplate = htmlTemplate.replace(/{APP_NAME}/g, "Shop-Ease");
-
-  const textTemplate = `Your OTP code for Shop-Ease is: ${otp}. It expires in 5 minutes. Never share this code with anyone.`;
-
   try {
-    const info = await transporter.sendMail({
-      // ✅ Fixed: Added await
-      from: process.env.MAIL_FROM,
-      to: email,
-      subject: "Shop-Ease OTP",
-      html: htmlTemplate,
-      text: textTemplate,
+    const response = await tranEmailApi.sendTransacEmail({
+      sender: {
+        email: process.env.MAIL_FROM,
+        name: "Shop-Ease",
+      },
+      to: [{ email }],
+      subject: "Shop-Ease OTP Verification",
+      textContent: `Your OTP for Shop-Ease verification is: ${otp}`,
+      htmlContent: `
+        <h2>Shop-Ease OTP</h2>
+        <p>Your OTP code is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP expires in 5 minutes.</p>
+      `,
     });
-    return info;
+
+    console.log("Email Sent Succesfully to", email, response.messageId);
+    return true;
   } catch (error) {
     console.error("Error sending email:", error);
-    throw new Error("Could not send email");
+    return false;
   }
 };
 
