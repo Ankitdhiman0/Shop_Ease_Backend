@@ -45,11 +45,11 @@ module.exports.registerUser = async (req, res) => {
     const token = generateToken(newUser._id);
 
     res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      path: "/",
+    httpOnly: true,
+    secure: true,          
+    sameSite: "none",      
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
     });
 
     return res.status(201).json({
@@ -96,10 +96,11 @@ module.exports.loginUser = async (req, res) => {
     const token = generateToken(user._id);
 
     res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: true,          
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
     });
 
     return res.json({
@@ -121,11 +122,11 @@ module.exports.loginUser = async (req, res) => {
 
 module.exports.logoutUser = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-    });
+   res.clearCookie("token", {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  });
 
     return res.json({ message: "Logged out successfully" });
   } catch (error) {
